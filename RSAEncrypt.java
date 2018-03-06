@@ -27,7 +27,7 @@ public class RSAEncrypt {
         System.out.println("Public Key(" + publicKey.getFormat() + "): " + outFile + ".pub");
     }
 
-    private PrivateKey loadPrivate(String privateFile) throws IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException{
+    private static PrivateKey loadPrivate(String privateFile) throws IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException{
         Path path = Paths.get(privateFile);
         byte[] bytes = Files.readAllBytes(path);
         PKCS8EncodedKeySpec keyspec = new PKCS8EncodedKeySpec(bytes);
@@ -36,10 +36,21 @@ public class RSAEncrypt {
         return privateKey;
     }
 
+    private static PublicKey loadPublic(String publicFile) throws IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException{
+        Path path = Paths.get(publicFile);
+        byte[] keyBytes = Files.readAllBytes(path);
+        X509EncodedKeySpec keyspec = new X509EncodedKeySpec(keyBytes);
+        KeyFactory keyfactory = KeyFactory.getInstance("RSA");
+        PublicKey publicKey = keyfactory.generatePublic(keyspec);
+        return publicKey;
+    }
+
     private static void decrypt(){
     }
 
-    public static void main(String[] args) throws IOException, NoSuchAlgorithmException, NoSuchProviderException{
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException{
         generateKey();
+        PublicKey publicKey = loadPublic("489906619.pub");
+        System.out.println(publicKey);
     }
 }
