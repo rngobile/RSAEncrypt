@@ -3,6 +3,7 @@ import java.security.*;
 import java.util.Random;
 import java.nio.file.*;
 import java.security.spec.*;
+import javax.crypto.*;
 
 public class RSAEncrypt {
     private static void generateKey() throws IOException, NoSuchAlgorithmException, NoSuchProviderException{
@@ -45,12 +46,31 @@ public class RSAEncrypt {
         return publicKey;
     }
 
-    private static void decrypt(){
+    private static void processFile(Cipher ci,InputStream in,OutputStream out) throws IllegalBlockSizeException, BadPaddingException, IOException{
+        byte[] ibuf = new byte[2024];
+        int len;
+        while ((len = in.read(ibuf)) != -1) {
+            byte[] obuf = ci.update(ibuf, 0, len);
+            if ( obuf != null ) out.write(obuf);
+        }
+        byte[] obuf = ci.doFinal();
+        if ( obuf != null ) out.write(obuf);
     }
 
-    public static void main(String[] args) throws IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException{
+    private static void encrypt(String publicFile, String inFile) throws Exception {
+        PublicKey publicKey = loadPublic(publicFile);
+        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+        try(FileInputStream in = new FileInputStream(inFile);
+            FileOutputStream out = new FileOutputStream(inFile + ".enc")){
+                processFile(cipher, in, out);
+            }
+    }
+
+    public static void main(String[] args) throws Exception, IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException{
         generateKey();
         PublicKey publicKey = loadPublic("489906619.pub");
         System.out.println(publicKey);
+        encrypt("489906619.pub", "hello.txt");
     }
 }
