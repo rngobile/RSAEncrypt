@@ -49,12 +49,16 @@ public class RSAEncrypt {
     private static void processFile(Cipher ci,InputStream in,OutputStream out) throws IllegalBlockSizeException, BadPaddingException, IOException{
         byte[] ibuf = new byte[2024];
         int len;
-        while ((len = in.read(ibuf)) != -1) {
-            byte[] obuf = ci.update(ibuf, 0, len);
+        try{
+            while ((len = in.read(ibuf)) != -1) {
+                byte[] obuf = ci.update(ibuf, 0, len);
+                if ( obuf != null ) out.write(obuf);
+            }
+            byte[] obuf = ci.doFinal();
             if ( obuf != null ) out.write(obuf);
+        } catch (Exception e) {
+            // Insert code for random string.
         }
-        byte[] obuf = ci.doFinal();
-        if ( obuf != null ) out.write(obuf);
     }
 
     private static void encrypt(String publicFile, String inFile) throws Exception {
@@ -67,10 +71,21 @@ public class RSAEncrypt {
             }
     }
 
+    public static void decrypt(String privateFile, String inFile) throws Exception {
+        PrivateKey privateKey = loadPrivate(privateFile);
+        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+        cipher.init(Cipher.DECRYPT_MODE, privateKey);
+        try(FileInputStream in = new FileInputStream(inFile);
+            FileOutputStream out = new FileOutputStream(inFile + ".dec")){
+                processFile(cipher, in, out);
+            }
+    }
+
     public static void main(String[] args) throws Exception, IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException{
         generateKey();
         PublicKey publicKey = loadPublic("489906619.pub");
         System.out.println(publicKey);
         encrypt("489906619.pub", "hello.txt");
+        decrypt("920369277.key", "hello.txt.enc");
     }
 }
