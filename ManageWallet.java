@@ -17,7 +17,7 @@ public class ManageWallet {
        String line = "";
        process = this.runtime.exec(cmd);
        OutputStream passwordIn = process.getOutputStream();
-       passwordIn.write(this.walletPassword.getBytes());
+       passwordIn.write((this.walletPassword + "\n").getBytes());
        passwordIn.flush();
 
        BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -26,10 +26,4 @@ public class ManageWallet {
        }
 
     }
-
-    public void printEverything() {
-        System.out.println(this.walletPassword);
-        System.out.println(this.walletLocation);
-    }
-
 }
