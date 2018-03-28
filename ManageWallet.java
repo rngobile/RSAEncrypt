@@ -15,7 +15,7 @@ public class ManageWallet {
     public void listWallet() throws Exception{
        String cmd = "mkstore -wrl " + this.walletLocation + " -listCredential -nologo";
        String line = "";
-       process = runtime.exec(cmd);
+       process = this.runtime.exec(cmd);
        OutputStream passwordIn = process.getOutputStream();
        passwordIn.write(this.walletPassword.getBytes());
        passwordIn.flush();
@@ -25,6 +25,11 @@ public class ManageWallet {
            System.out.println(line);
        }
 
+    }
+
+    public void printEverything() {
+        System.out.println(this.walletPassword);
+        System.out.println(this.walletLocation);
     }
 
 }
