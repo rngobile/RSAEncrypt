@@ -1,20 +1,23 @@
 import java.io.*;
 
-public class ManageWallet throws Exception {
-    public ManageWallet(String walletLocation, String walletPassword){
-        String walletLocation = this.walletLocation;
-        String walletPassword = this.walletPassword;
+public class ManageWallet {
+    private String walletLocation, walletPassword;
+    private Process process = null;
+    private Runtime runtime = null;
 
-        Runtime runtime = new Runtime.getRuntime();
-        Process process = null;
-        String line = "";
+    public ManageWallet(String walletLocation, String walletPassword){
+        this.walletLocation = walletLocation;
+        this.walletPassword = walletPassword;
+
+        this.runtime = Runtime.getRuntime();
     }
     
-    public void listWallet(String walletLocation){
-       String cmd = "mkstore -wrl /home/oracle/wallets -listCredential -nologo";
+    public void listWallet() throws Exception{
+       String cmd = "mkstore -wrl " + this.walletLocation + " -listCredential -nologo";
+       String line = "";
        process = runtime.exec(cmd);
        OutputStream passwordIn = process.getOutputStream();
-       passwordIn.write(password.getBytes());
+       passwordIn.write(this.walletPassword.getBytes());
        passwordIn.flush();
 
        BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
