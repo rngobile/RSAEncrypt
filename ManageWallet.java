@@ -1,4 +1,6 @@
 import java.io.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class ManageWallet {
     private String walletLocation, walletPassword;
@@ -12,9 +14,11 @@ public class ManageWallet {
         this.runtime = Runtime.getRuntime();
     }
     
-    public void listWallet() throws Exception{
+    public List<String> listWallet() throws Exception{
        String cmd = "mkstore -wrl " + this.walletLocation + " -listCredential -nologo";
        String line = "";
+       List<String> entries = new ArrayList<>();
+
        process = this.runtime.exec(cmd);
        OutputStream passwordIn = process.getOutputStream();
        passwordIn.write((this.walletPassword + "\n").getBytes());
@@ -22,8 +26,10 @@ public class ManageWallet {
 
        BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
        while (( line = input.readLine()) != null ){
-           System.out.println(line);
+           if ( line.matches("(\\d)+:(.*)") ) {
+               entries.add(line);
+           }
        }
-
+       return entries;
     }
 }
