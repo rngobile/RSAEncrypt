@@ -17,7 +17,7 @@ public class ManageWallet {
     public List<String> listWallet() throws Exception{
        String cmd = "mkstore -wrl " + this.walletLocation + " -listCredential -nologo";
        String line = "";
-       List<String> entries = new ArrayList<>();
+       List<String> entries = new ArrayList<String>();
 
        process = this.runtime.exec(cmd);
        OutputStream passwordIn = process.getOutputStream();
