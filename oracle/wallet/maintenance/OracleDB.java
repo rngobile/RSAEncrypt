@@ -1,11 +1,26 @@
+package oracle.wallet.maintenance;
+
 import java.sql.*;
 
 class OracleDB{
     static final String JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver";
-    public static void main(String[] args) throws Exception{
-        System.setProperty("oracle.net.tns_admin","/u01/app/oracle/product/12.1.0/dbhome_2/network/admin");
-        System.setProperty("oracle.net.wallet_location","/home/oracle/wallets");
+    private String tnsAdmin = "/u01/app/oracle/product/12.1.0/dbhome_2/network/admin";
+    private String walletLocation = "/home/oracle/wallets";
+    private Connection conn = null;
 
+    public OracleDB(){
+        System.setProperty("oracle.net.tns_admin",tnsAdmin);
+        System.setProperty("oracle.net.wallet_location",walletLocation);
+    }
+
+    public OracleDB(String tnsAdmin, String walletLocation){
+        this.tnsAdmin = tnsAdmin;
+        this.walletLocation = walletLocation;
+        System.setProperty("oracle.net.tns_admin",this.tnsAdmin);
+        System.setProperty("oracle.net.wallet_location",this.walletLocation);
+    }
+
+    public void connect(String tnsName){
         try{
             Class.forName(JDBC_DRIVER);
         } catch (ClassNotFoundException e) {
@@ -14,24 +29,22 @@ class OracleDB{
             return;
         }
 
-        Connection connection = null;
-
         try {
-            connection = DriverManager.getConnection("jdbc:oracle:thin:/@eggplant.test");
+            this.conn = DriverManager.getConnection("jdbc:oracle:thin:/@" + tnsName);
         } catch (SQLException e) {
             System.out.println("Connection Failed!");
             e.printStackTrace();
             return;
         }
+    }
 
+    public void changePassword(String user, String newPassword, String oldPassword){
 
-        if (connection != null) {
+        if (this.conn != null) {
             try {
-                String user = "rn_test";
-                String newPassword = "password";
-                String oldPassword = "rn_test";
-                String sql = "alter user " + user + " identified by \"" + newPassword + "\" replace \"" + oldPassword  + "\"";
                 char[] injection = {'"','\'',';','-'};
+                String sql = "alter user " + user + " identified by \"" + newPassword + "\" replace \"" + oldPassword  + "\"";
+
                 for (int i = 0; i < injection.length; i++){
                     if (user.indexOf(injection[i]) >= 0){
                         System.out.println("Error: Character " + injection[i] + " is not allowed for user.");
@@ -45,15 +58,15 @@ class OracleDB{
                     }
                 }
 
-                Statement stmt = connection.createStatement();
+                Statement stmt = conn.createStatement();
                 stmt.setEscapeProcessing(false);
                 stmt.executeUpdate(sql);
+                conn.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else{
             System.out.println("Failed to make connection!");
         }
-
     }
 }
