@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Created-by: rngobile
+Name: oracle/wallet/maintenance
+Main-Class: Test
+Class-Path: lib/commons-cli-1.0.jar lib/ojdbc6.jar lib/oraclepki.jar lib/osdt_cert.jar lib/osdt_core.jar
