@@ -1,3 +1,5 @@
+package oracle.wallet.maintenance;
+
 import java.security.SecureRandom;
 
 public class PasswordGenerator {
