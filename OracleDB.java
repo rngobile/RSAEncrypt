@@ -24,8 +24,33 @@ class OracleDB{
             return;
         }
 
+
         if (connection != null) {
-            System.out.println("Write SQL Statement here");
+            try {
+                String user = "rn_test";
+                String newPassword = "password";
+                String oldPassword = "rn_test";
+                String sql = "alter user " + user + " identified by \"" + newPassword + "\" replace \"" + oldPassword  + "\"";
+                char[] injection = {'"','\'',';','-'};
+                for (int i = 0; i < injection.length; i++){
+                    if (user.indexOf(injection[i]) >= 0){
+                        System.out.println("Error: Character " + injection[i] + " is not allowed for user.");
+                        return;
+                    } else if (newPassword.indexOf(injection[i]) >= 0 ){
+                        System.out.println("Error: Character " + injection[i] + " is not allowed for newPassword.");
+                        return;
+                    } else if (oldPassword.indexOf(injection[i]) >= 0 ){
+                        System.out.println("Error: Character " + injection[i] + " is not allowed for oldPassword.");
+                        return;
+                    }
+                }
+
+                Statement stmt = connection.createStatement();
+                stmt.setEscapeProcessing(false);
+                stmt.executeUpdate(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else{
             System.out.println("Failed to make connection!");
         }
