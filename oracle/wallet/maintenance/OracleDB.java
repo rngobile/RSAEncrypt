@@ -38,8 +38,19 @@ class OracleDB{
         }
     }
 
-    public void changePassword(String user, String newPassword, String oldPassword){
+    public void disconnect(){
+        try{
+            if (this.conn != null) {
+                this.conn.close();
+            } else {
+                System.out.println("ERROR: Not connected.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void changePassword(String user, String newPassword, String oldPassword){
         if (this.conn != null) {
             try {
                 char[] injection = {'"','\'',';','-'};
@@ -61,7 +72,7 @@ class OracleDB{
                 Statement stmt = conn.createStatement();
                 stmt.setEscapeProcessing(false);
                 stmt.executeUpdate(sql);
-                conn.close();
+                System.out.println("Success: " + user + " password has been changed.");
             } catch (Exception e) {
                 e.printStackTrace();
             }
