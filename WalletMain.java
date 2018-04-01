@@ -103,7 +103,7 @@ public class WalletMain {
                                 for (int k = 0; k < entries.size(); k++){
                                     if (fixEntries[j].equals(entries.get(k).getName())){
                                         OracleDB db = new OracleDB(tnsAdmin, walletLocation);
-                                        db.connect(entries.get(k).getName());
+                                        db.connect(entries.get(k).getAlias());
                                         db.test("richard");
                                     }
                                 }
