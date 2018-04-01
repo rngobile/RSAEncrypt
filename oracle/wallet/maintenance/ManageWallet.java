@@ -54,8 +54,8 @@ public class ManageWallet {
            }
            System.exit(0);
        } else {
-           for(int i = 0; i < entry.size(); i++){
-               int id = entries.get(i).getId();
+           for(int i = 0; i < entries.size(); i++){
+               id = entries.get(i).getId();
                entries.get(i).setPassword(getPassword(id));
            }
        } 
