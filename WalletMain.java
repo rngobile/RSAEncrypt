@@ -90,7 +90,6 @@ public class WalletMain {
                         ManageWallet wallet = new ManageWallet(walletLocation, newMessage);
                         List<String> entries = wallet.listWallet();
 
-                        System.out.println(entries.size());
                         for(int i = 0; i < entries.size(); i++){
                             System.out.println(entries.get(i));
                         }
