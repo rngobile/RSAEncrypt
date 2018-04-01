@@ -78,7 +78,7 @@ public class OracleDB{
                 String sql = "alter user " + user + " identified by \"" + newPassword + "\" replace \"" + oldPassword  + "\"";
 
                 Statement stmt = conn.createStatement();
-                stmt.setEscapeProcessing(false);
+                //stmt.setEscapeProcessing(true);
                 stmt.executeUpdate(sql);
                 System.out.println("Success: " + user + " password has been changed.");
                 return true;

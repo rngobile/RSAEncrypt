@@ -8,7 +8,7 @@ public class PasswordGenerator {
     private static final String UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
     private static final String NUMBER = "1234567890";
-    private static final String SPECIAL = "^!%=?{[]}+~#_.:,<>|\\";
+    private static final String SPECIAL = "^!%?{[]}+~#_.:,<>|\\";
     private static final String DICTIONARY = UPPERCASE + LOWERCASE + NUMBER + SPECIAL;
 
     public String generatePassword(int length){
