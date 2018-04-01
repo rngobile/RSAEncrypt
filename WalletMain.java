@@ -101,18 +101,20 @@ public class WalletMain {
                             String[] fixEntries = cmd.getOptionValue("f").split(",");
                             for (int j = 0; j < fixEntries.length; j++){
                                 for (int k = 0; k < entries.size(); k++){
-                                    if (fixEntries[j].equals(entries.get(k).getName())){
+                                    if (fixEntries[j].equals(entries.get(k).getAlias())){
+                                        System.out.println("Connecting to "  + entries.get(k).getAlias() + "..");
                                         OracleDB db = new OracleDB(tnsAdmin, walletLocation);
                                         db.connect(entries.get(k).getAlias());
-                                        db.test("richard");
+                                        db.test("sysdate");
                                     }
                                 }
                             }
                         } else {
                             for (int i = 0; i < entries.size(); i++){
                                 OracleDB db = new OracleDB(tnsAdmin, walletLocation);
+                                System.out.println("Connecting to "  + entries.get(i).getAlias() + "..");
                                 db.connect(entries.get(i).getAlias());
-                                db.test("richard");
+                                db.test("sysdate");
                             }
                         }
                     } catch (Exception e){
