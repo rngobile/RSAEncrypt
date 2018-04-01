@@ -15,31 +15,68 @@ public class ManageWallet {
 
         this.runtime = Runtime.getRuntime();
     }
+
+    private BufferedReader executeCommand(String cmd) throws Exception{
+        process = this.runtime.exec(cmd);
+        OutputStream passwordIn = process.getOutputStream();
+        passwordIn.write((this.walletPassword + "\n").getBytes());
+        passwordIn.flush();
+
+        BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        return input;
+    }
     
-    public List<String> listWallet() throws Exception{
+    public List<WalletInfo> listWallet() throws Exception{
        String cmd = "mkstore -wrl " + this.walletLocation + " -listCredential -nologo";
        String line = "";
-       List<String> entries = new ArrayList<String>();
+       List<WalletInfo> entries = new ArrayList<WalletInfo>();
        List<String> error = new ArrayList<String>();
+       int id;
+       String alias;
+       String username;
 
-       process = this.runtime.exec(cmd);
-       OutputStream passwordIn = process.getOutputStream();
-       passwordIn.write((this.walletPassword + "\n").getBytes());
-       passwordIn.flush();
-
-       BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
+       BufferedReader input = executeCommand(cmd);
        while (( line = input.readLine()) != null ){
            if ( line.matches("(\\d)+:(.*)") ) { 
-               entries.add(line);
+               id =  Integer.parseInt(line.split(":")[0]);
+               alias = line.split(":")[1].trim().split(" ")[0];
+               username = line.split(":")[1].trim().split(" ")[1];
+
+               WalletInfo entry = new WalletInfo(id, alias, username);
            } else {
                error.add(line);
            }
        }
 
-       if (entries.size() > 0 ){
-           return entries;
+       if (entries.size() <= 0 ){
+           for(int i = 0; i < error.size(); i++){
+               System.out.println(i);
+           }
+           System.exit(0);
        } else {
-           return error;
-       }
+           for(int i = 0; i < entry.size(); i++){
+               int id = entries.get(i).getId();
+               entries.get(i).setPassword(getPassword(id));
+           }
+       } 
+
+       return entries;
+    }
+
+    private String getPassword(int id) throws Exception{
+        String entryAlias = "oracle.security.client.password" + id;
+        String cmd = "mkstore -wrl " + this.walletLocation + " -viewEntry " + entryAlias;
+        BufferedReader input = executeCommand(cmd);
+        String line, password = "";
+
+        while (( line = input.readLine()) != null){
+            if (line.matches(entryAlias)){
+                password = line.split("=")[2].trim();
+            } else {
+                System.out.println("ERROR: alias " + entryAlias + " does not exist.");
+            }
+        }
+
+        return password;
     }
 }
