@@ -71,11 +71,13 @@ public class ManageWallet {
         String line, password = "";
 
         while (( line = input.readLine()) != null){
-            if (line.matches(entryAlias)){
-                password = line.split("=")[2].trim();
-            } else {
-                System.out.println("ERROR: alias " + entryAlias + " does not exist.");
-            }
+            if (line.matches(entryAlias + "(.*)")){
+                password = line.split("=")[1].trim();
+            } 
+        }
+
+        if (password == null){
+            System.out.println("ERROR: alias " + entryAlias + " does not exist.");
         }
 
         return password;
