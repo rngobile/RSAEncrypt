@@ -50,7 +50,7 @@ public class ManageWallet {
 
        if (entries.size() <= 0 ){
            for(int i = 0; i < error.size(); i++){
-               System.out.println(i);
+               System.out.println(error.get(i));
            }
            System.exit(0);
        } else {
