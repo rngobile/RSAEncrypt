@@ -43,6 +43,7 @@ public class ManageWallet {
                username = line.split(":")[1].trim().split(" ")[1];
 
                WalletInfo entry = new WalletInfo(id, alias, username);
+               entries.add(entry);
            } else {
                error.add(line);
            }
