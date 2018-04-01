@@ -88,7 +88,7 @@ public class WalletMain {
                     try{
                         String newMessage = rsa.decrypt(secretKey, message);
                         ManageWallet wallet = new ManageWallet(walletLocation, newMessage);
-                        List<String> entries = wallet.listWallet();
+                        List<WalletInfo> entries = wallet.listWallet();
 
                         for(int i = 0; i < entries.size(); i++){
                             System.out.println(entries.get(i));

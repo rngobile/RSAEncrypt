@@ -1,6 +1,8 @@
 package oracle.wallet.maintenance;
 
 import java.sql.*;
+import java.util.Map;
+import java.util.HashMap;
 
 class OracleDB{
     static final String JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver";
@@ -50,24 +52,30 @@ class OracleDB{
         }
     }
 
+    private void checkInjections(Map<String, String> variables){
+        char[] injection = {'"','\'',';','-'};
+
+        for (int i = 0; i < injection.length; i++){
+            for(Map.Entry<String,String> entry: variables.entrySet()){
+                if(entry.getValue().indexOf(injection[i]) >= 0){
+                    System.out.println("Error: Character " + injection[i] + " is not allowed for " + entry.getKey());
+                    return;
+                }
+            }
+        }
+
+   }
+
     public void changePassword(String user, String newPassword, String oldPassword){
         if (this.conn != null) {
             try {
-                char[] injection = {'"','\'',';','-'};
-                String sql = "alter user " + user + " identified by \"" + newPassword + "\" replace \"" + oldPassword  + "\"";
 
-                for (int i = 0; i < injection.length; i++){
-                    if (user.indexOf(injection[i]) >= 0){
-                        System.out.println("Error: Character " + injection[i] + " is not allowed for user.");
-                        return;
-                    } else if (newPassword.indexOf(injection[i]) >= 0 ){
-                        System.out.println("Error: Character " + injection[i] + " is not allowed for newPassword.");
-                        return;
-                    } else if (oldPassword.indexOf(injection[i]) >= 0 ){
-                        System.out.println("Error: Character " + injection[i] + " is not allowed for oldPassword.");
-                        return;
-                    }
-                }
+                Map<String,String> variables = new HashMap<String,String>();
+                variables.put("user",user);
+                variables.put("newPassword", newPassword);
+                variables.put("oldPassword", oldPassword);
+                checkInjections(variables);
+                String sql = "alter user " + user + " identified by \"" + newPassword + "\" replace \"" + oldPassword  + "\"";
 
                 Statement stmt = conn.createStatement();
                 stmt.setEscapeProcessing(false);
@@ -75,8 +83,33 @@ class OracleDB{
                 System.out.println("Success: " + user + " password has been changed.");
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                disconnect();
             }
         } else{
+            System.out.println("Failed to make connection!");
+        }
+    }
+
+    public void test (String text){
+        if (this.conn != null){
+            try{
+                Map<String,String> variables = new HashMap<String,String>();
+                variables.put("text",text);
+                checkInjections(variables);
+                String sql = "select " + text + " from dual";
+
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql);
+                while(rs.next()){
+                    System.out.println(rs.getString(text));
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            } finally{
+                disconnect();
+            }
+        } else {
             System.out.println("Failed to make connection!");
         }
     }
