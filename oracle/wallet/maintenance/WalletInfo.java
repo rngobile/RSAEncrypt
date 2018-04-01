@@ -1,3 +1,5 @@
+package oracle.wallet.maintenance;
+
 public class WalletInfo {
     private int id;
     private String alias;
