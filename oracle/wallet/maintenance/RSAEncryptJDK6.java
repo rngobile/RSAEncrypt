@@ -20,30 +20,34 @@ import javax.crypto.CipherOutputStream;
 
 public class RSAEncryptJDK6 {
    
-    public static void generateKey() throws Exception, NoSuchAlgorithmException {
-        KeyPairGenerator keygen = KeyPairGenerator.getInstance("RSA");
-        final int keySize = 2048;
-        keygen.initialize(keySize);      
+    public static void generateKey(){
+        try {
+            KeyPairGenerator keygen = KeyPairGenerator.getInstance("RSA");
+            final int keySize = 2048;
+            keygen.initialize(keySize);      
 
-        KeyPair keypair = keygen.genKeyPair();
+            KeyPair keypair = keygen.genKeyPair();
 
-        PublicKey publicKey = keypair.getPublic();
-        PrivateKey privateKey = keypair.getPrivate();
+            PublicKey publicKey = keypair.getPublic();
+            PrivateKey privateKey = keypair.getPrivate();
 
-        Random random = new Random();
-        Integer randomNum = random.nextInt(2147483647) + 1;
-        String outFile = randomNum.toString();
+            Random random = new Random();
+            Integer randomNum = random.nextInt(2147483647) + 1;
+            String outFile = randomNum.toString();
 
-        FileOutputStream outKey = new FileOutputStream(outFile + ".key");
-        outKey.write(privateKey.getEncoded());
-        outKey.close();
+            FileOutputStream outKey = new FileOutputStream(outFile + ".key");
+            outKey.write(privateKey.getEncoded());
+            outKey.close();
 
-        FileOutputStream outPub = new FileOutputStream(outFile + ".pub");
-        outPub.write(publicKey.getEncoded());
-        outPub.close();
+            FileOutputStream outPub = new FileOutputStream(outFile + ".pub");
+            outPub.write(publicKey.getEncoded());
+            outPub.close();
 
-        System.out.println("Private Key(" + privateKey.getFormat() + "): " + outFile + ".key");
-        System.out.println("Public Key(" + publicKey.getFormat() + "): " + outFile + ".pub");
+            System.out.println("Private Key(" + privateKey.getFormat() + "): " + outFile + ".key");
+            System.out.println("Public Key(" + publicKey.getFormat() + "): " + outFile + ".pub");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private static PrivateKey getPrivate(String privateFile) throws Exception {

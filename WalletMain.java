@@ -34,6 +34,9 @@ public class WalletMain {
 
         if (cmd.hasOption("h")){
             printHelp(options);
+        } else if (cmd.hasOption("g")){
+            RSAEncryptJDK6 gen = new RSAEncryptJDK6();
+            gen.generateKey();
         } else if ( cmd.hasOption("c")){
             String file = cmd.getOptionValue("c");
             PropertyFile config = new PropertyFile(file);
