@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.Map;
 import java.util.HashMap;
 
-class OracleDB{
+public class OracleDB{
     static final String JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver";
     private String tnsAdmin = "/u01/app/oracle/product/12.1.0/dbhome_2/network/admin";
     private String walletLocation = "/home/oracle/wallets";

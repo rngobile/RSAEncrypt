@@ -1,6 +1,7 @@
 import oracle.wallet.maintenance.*;
 import org.apache.commons.cli.*;
 import java.util.List;
+import java.util.ArrayList;
 
 public class WalletMain {
     static HelpFormatter formatter = new HelpFormatter();
@@ -82,7 +83,7 @@ public class WalletMain {
                     int maxFiles = Integer.parseInt(config.getProperty("maxFiles"));
                     String secretKey = config.getProperty("secretKey");
                     String message = config.getProperty("message");
-                    String fixEntries = config.getProperty("fixEntries");
+                    String[] fixEntries = config.getProperty("fixEntries").split(",");
 
                     RSAEncryptJDK6 rsa = new RSAEncryptJDK6();
                     try{
@@ -90,8 +91,23 @@ public class WalletMain {
                         ManageWallet wallet = new ManageWallet(walletLocation, newMessage);
                         List<WalletInfo> entries = wallet.listWallet();
 
-                        for(int i = 0; i < entries.size(); i++){
-                            System.out.println(entries.get(i));
+                        if ((fixEntries == null) && (fixEntries.length <= 0)) {
+                            for (int i = 0; i < entries.size(); i++){
+                                OracleDB db = new OracleDB(tnsAdmin, walletLocation);
+                                db.connect(entries.get(i).getName());
+                                db.test("richard");
+                            }
+                        } else {
+                            for (int j = 0; j < fixEntries.length; j++){
+                                for (int k = 0; k < entries.size(); k++){
+                                    if (fixEntries[j].equals(entries.get(k).getName())){
+                                        OracleDB db = new OracleDB(tnsAdmin, walletLocation);
+                                        db.connect(entries.get(k).getName());
+                                        db.test("richard");
+                                    }
+                                }
+                            }
+
                         }
                     } catch (Exception e){
                         e.printStackTrace();
