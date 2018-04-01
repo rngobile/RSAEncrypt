@@ -34,7 +34,7 @@ public class WalletInfo {
         this.username = username;
     }
 
-    public String password(){
+    public String getPassword(){
         return this.password;
     }
 
