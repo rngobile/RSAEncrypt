@@ -1,5 +1,4 @@
-package oracle.wallet.maintenance;
-
+import oracle.wallet.maintenance.*;
 import org.apache.commons.cli.*;
 
 public class WalletMain {
