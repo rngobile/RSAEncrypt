@@ -52,19 +52,24 @@ public class WalletMain {
                     String tnsAdmin = config.getProperty("tnsAdmin");
                     int maxFiles = Integer.parseInt(config.getProperty("maxFiles"));
                     String secretKey = config.getProperty("secretKey");
+                    String message = config.getProperty("message");
                     String fixEntries = config.getProperty("fixEntries");
 
                     RSAEncryptJDK6 rsa = new RSAEncryptJDK6();
                     String newMessage = rsa.decrypt(secretKey, message);
-                    
 
-                    ManageWallet wallet = new ManageWallet(walletLocation, secretKey);
+                    ManageWallet wallet = new ManageWallet(walletLocation, newMessage);
+                    try{
+                        List<String> entries = wallet.listWallet();
 
-                    System.out.println(walletLocation);
-                    System.out.println(tnsAdmin);
-                    System.out.println(maxFiles);
-                    System.out.println(secretKey);
-                    System.out.println(fixEntries);
+                        for(int i = 0; i < entries.size(); i++){
+                            System.out.println(entries.get(i));
+                        }
+                    } catch (Exception e){
+                        e.printStackTrace();
+                        System.exit(0);
+                    }
+
                 }
             } else {
                 System.out.println("ERROR: Please provide config file.");
