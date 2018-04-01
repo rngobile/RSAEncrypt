@@ -66,7 +66,7 @@ public class ManageWallet {
 
     private String getPassword(int id) throws Exception{
         String entryAlias = "oracle.security.client.password" + id;
-        String cmd = "mkstore -wrl " + this.walletLocation + " -viewEntry " + entryAlias;
+        String cmd = "mkstore -wrl " + this.walletLocation + " -viewEntry " + entryAlias + " -nologo";
         BufferedReader input = executeCommand(cmd);
         String line, password = "";
 
