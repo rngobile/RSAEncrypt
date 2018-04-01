@@ -3,6 +3,7 @@ package oracle.wallet.maintenance;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Random;
 import java.util.Arrays;
 
@@ -97,7 +98,7 @@ public class RSAEncryptJDK6 {
         cipherOut.close();
     }
     
-    public static void decrypt(String privateFile, String file) throws Exception {
+    public static String decrypt(String privateFile, String file) throws Exception {
         byte[] bytes = new byte[file.length()];
         int i;
 
@@ -106,6 +107,15 @@ public class RSAEncryptJDK6 {
         cipher.init(Cipher.DECRYPT_MODE, privateKey);  
 
         FileInputStream fileIn = new FileInputStream(file);
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+
+        while (( i = fileIn.read(bytes)) != -1) {
+            buffer.write(bytes,0,i);
+        }
+        buffer.flush();
+
+        /*
         FileOutputStream fileOut = new FileOutputStream(file + ".dec");
 
         CipherOutputStream cipherOut = new CipherOutputStream(fileOut, cipher);
@@ -115,6 +125,11 @@ public class RSAEncryptJDK6 {
         }
 
         cipherOut.close();
+        */
+
+        String decrypted = new String(cipher.doFinal(buffer.toByteArray()));
+        
+        return decrypted;
     }
 
 }
