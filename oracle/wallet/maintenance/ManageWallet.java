@@ -20,6 +20,7 @@ public class ManageWallet {
        String cmd = "mkstore -wrl " + this.walletLocation + " -listCredential -nologo";
        String line = "";
        List<String> entries = new ArrayList<String>();
+       List<String> error = new ArrayList<String>();
 
        process = this.runtime.exec(cmd);
        OutputStream passwordIn = process.getOutputStream();
@@ -28,10 +29,17 @@ public class ManageWallet {
 
        BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
        while (( line = input.readLine()) != null ){
-           if ( line.matches("(\\d)+:(.*)") ) {
+           if ( line.matches("(\\d)+:(.*)") ) { 
                entries.add(line);
+           } else {
+               error.add(line);
            }
        }
-       return entries;
+
+       if (entries.size() > 0 ){
+           return entries;
+       } else {
+           return error;
+       }
     }
 }

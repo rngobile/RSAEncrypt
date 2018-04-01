@@ -1,11 +1,12 @@
 import oracle.wallet.maintenance.*;
 import org.apache.commons.cli.*;
+import java.util.List;
 
 public class WalletMain {
     static HelpFormatter formatter = new HelpFormatter();
 
     public static void printHelp(Options options){
-        formatter.printHelp("WalletMain [--help | [-g] | [-w -c <CONFIG FILE>]", options);
+        formatter.printHelp("WalletMain [--help | [-g] | [-e <FILE> -p <PUBLIC KEY>] | [-w -c <CONFIG FILE>]", options);
         System.exit(0);
     }
 
@@ -15,6 +16,20 @@ public class WalletMain {
         Options options = new Options();
         CommandLine cmd = null;
 
+        options.addOption(OptionBuilder.withArgName("e")
+                .withLongOpt("encrypt-file")
+                .hasArgs()
+                .withArgName("file")
+                .withDescription("encrypt file")
+                .create("e")
+                );
+        options.addOption(OptionBuilder.withArgName("p")
+                .withLongOpt("public-key")
+                .hasArgs()
+                .withArgName("public-key")
+                .withDescription("public key file")
+                .create("p")
+                );
         options.addOption(OptionBuilder.withArgName("w")
                 .withLongOpt("wallet")
                 .withDescription("change passwords for wallet entries")
@@ -42,6 +57,20 @@ public class WalletMain {
         } else if (cmd.hasOption("g")){
             RSAEncryptJDK6 gen = new RSAEncryptJDK6();
             gen.generateKey();
+        } else if (cmd.hasOption("e")){
+            if(cmd.hasOption("p")){
+                String file = cmd.getOptionValue("e");
+                String publicKey = cmd.getOptionValue("p");
+
+                try {
+                   RSAEncryptJDK6.encrypt(publicKey, file);
+                } catch (Exception e){
+                   e.printStackTrace(); 
+                }
+            } else {
+                System.out.println("ERROR: Please provide public key.");
+                printHelp(options);
+            }
         } else {
             if (cmd.hasOption("c")){
                 String file = cmd.getOptionValue("c");
@@ -56,12 +85,12 @@ public class WalletMain {
                     String fixEntries = config.getProperty("fixEntries");
 
                     RSAEncryptJDK6 rsa = new RSAEncryptJDK6();
-                    String newMessage = rsa.decrypt(secretKey, message);
-
-                    ManageWallet wallet = new ManageWallet(walletLocation, newMessage);
                     try{
+                        String newMessage = rsa.decrypt(secretKey, message);
+                        ManageWallet wallet = new ManageWallet(walletLocation, newMessage);
                         List<String> entries = wallet.listWallet();
 
+                        System.out.println(entries.size());
                         for(int i = 0; i < entries.size(); i++){
                             System.out.println(entries.get(i));
                         }
