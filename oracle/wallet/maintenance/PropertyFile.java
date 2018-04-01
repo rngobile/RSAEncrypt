@@ -13,6 +13,7 @@ public class PropertyFile {
             this.prop.load(is);
         } catch (Exception e) {
             e.printStackTrace();
+            System.exit(0);
         }
     }
     
