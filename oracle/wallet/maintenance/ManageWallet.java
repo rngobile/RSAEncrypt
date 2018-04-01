@@ -72,7 +72,7 @@ public class ManageWallet {
 
         while (( line = input.readLine()) != null){
             if (line.matches(entryAlias + "(.*)")){
-                password = line.split("=")[1].trim();
+                password = line.split("=",2)[1].trim();
             } 
         }
 
