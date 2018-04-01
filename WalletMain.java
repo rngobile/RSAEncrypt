@@ -7,7 +7,7 @@ public class WalletMain {
     static HelpFormatter formatter = new HelpFormatter();
 
     public static void printHelp(Options options){
-        formatter.printHelp("WalletMain [--help | [-g] | [-e <FILE> -p <PUBLIC KEY>] | [-w -c <CONFIG FILE>]", options);
+        formatter.printHelp("WalletMain [--help | [-g] | [-e <FILE> -p <PUBLIC KEY>] | [-w -c <CONFIG FILE> | -f <WALLET ALIAS>]", options);
         System.exit(0);
     }
 
@@ -42,6 +42,13 @@ public class WalletMain {
                 .withArgName("config-file")
                 .withDescription("load config file")
                 .create("c")
+                );
+        options.addOption(OptionBuilder.withArgName("f")
+                .withLongOpt("fix-database")
+                .hasArgs()
+                .withArgName("database-aliases")
+                .withDescription("fix one off wallet entries, use tns alias for wallet with comma separation, no space")
+                .create("f")
                 );
         options.addOption("h", "help", false, "shows help");
         options.addOption("g", "generate-key", false, "create key pair");
@@ -83,7 +90,6 @@ public class WalletMain {
                     int maxFiles = Integer.parseInt(config.getProperty("maxFiles"));
                     String secretKey = config.getProperty("secretKey");
                     String message = config.getProperty("message");
-                    String[] fixEntries = config.getProperty("fixEntries").split(",");
 
                     RSAEncryptJDK6 rsa = new RSAEncryptJDK6();
                     try{
@@ -91,13 +97,8 @@ public class WalletMain {
                         ManageWallet wallet = new ManageWallet(walletLocation, newMessage);
                         List<WalletInfo> entries = wallet.listWallet();
 
-                        if ((fixEntries == null) && (fixEntries.length <= 0)) {
-                            for (int i = 0; i < entries.size(); i++){
-                                OracleDB db = new OracleDB(tnsAdmin, walletLocation);
-                                db.connect(entries.get(i).getName());
-                                db.test("richard");
-                            }
-                        } else {
+                        if (cmd.hasOption("f")) {
+                            String[] fixEntries = cmd.getOptionValue("f").split(",");
                             for (int j = 0; j < fixEntries.length; j++){
                                 for (int k = 0; k < entries.size(); k++){
                                     if (fixEntries[j].equals(entries.get(k).getName())){
@@ -107,7 +108,12 @@ public class WalletMain {
                                     }
                                 }
                             }
-
+                        } else {
+                            for (int i = 0; i < entries.size(); i++){
+                                OracleDB db = new OracleDB(tnsAdmin, walletLocation);
+                                db.connect(entries.get(i).getName());
+                                db.test("richard");
+                            }
                         }
                     } catch (Exception e){
                         e.printStackTrace();
