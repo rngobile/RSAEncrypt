@@ -112,9 +112,19 @@ public class WalletMain {
                         } else {
                             for (int i = 0; i < entries.size(); i++){
                                 OracleDB db = new OracleDB(tnsAdmin, walletLocation);
-                                System.out.println("Connecting to "  + entries.get(i).getAlias() + "..");
-                                db.connect(entries.get(i).getAlias());
-                                db.test("sysdate");
+                                String alias = entries.get(i).getAlias();
+                                int id = entries.get(i).getId();
+                                System.out.println("Connecting to "  + alias + "..");
+                                db.connect(alias);
+                                PasswordGenerator gen = new PasswordGenerator();
+                                String newPassword = gen.generatePassword(30);
+                                boolean success = db.changePassword(entries.get(i).getName(), newPassword, entries.get(i).getPassword());
+                                //db.test("sysdate");
+                                if (success){
+                                    wallet.changePassword(id, newPassword);
+                                } else{
+                                    System.out.println("!! -- Skipping " + alias + ": Please fix manually with the --fix-database argument. --!!" );
+                                }
                             }
                         }
                     } catch (Exception e){

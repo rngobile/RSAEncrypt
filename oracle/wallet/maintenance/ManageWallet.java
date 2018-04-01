@@ -82,4 +82,25 @@ public class ManageWallet {
 
         return password;
     }
+
+    public void changePassword(int id, String password) throws Exception{
+        String entryAlias = "oracle.security.client.password" + id;
+        String cmd = "mkstore -wrl " + this.walletLocation + " -modifyEntry " + entryAlias + " " + password + " -nologo";
+        BufferedReader input =  executeCommand(cmd);
+        String line = "";
+        List<String> lines = new ArrayList<String>();
+
+        while (( line = input.readLine()) != null){
+            lines.add(line); 
+        }
+
+        if (lines.size() > 1){
+            System.out.println("ERROR: wallet password change failed.");
+            for (int i = 1; i < lines.size(); i++){
+                System.out.println(lines.get(i));
+            }
+        } else {
+            System.out.println("Success: wallet password has been changed for " + entryAlias + ".");
+        }
+    }
 }

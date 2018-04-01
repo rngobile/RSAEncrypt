@@ -66,7 +66,7 @@ public class OracleDB{
 
    }
 
-    public void changePassword(String user, String newPassword, String oldPassword){
+    public boolean changePassword(String user, String newPassword, String oldPassword){
         if (this.conn != null) {
             try {
 
@@ -81,13 +81,16 @@ public class OracleDB{
                 stmt.setEscapeProcessing(false);
                 stmt.executeUpdate(sql);
                 System.out.println("Success: " + user + " password has been changed.");
+                return true;
             } catch (Exception e) {
                 e.printStackTrace();
+                return false;
             } finally {
                 disconnect();
             }
         } else{
             System.out.println("Failed to make connection!");
+            return false;
         }
     }
 
