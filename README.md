@@ -131,6 +131,6 @@ Example below for 12:00AM at the first of every month.
 
 ## TO-DO:
 + Email Reporting Service for Errors
-+ Base64 Class for implemention of Ceasar Cipher
++ Base64 Class
 + Command-Line Argument to Regenerate Everything including the Wallet itself.
 
