@@ -98,7 +98,7 @@ Usage:
 
 Example:
 ```
-[oracle@soa-training RSAEncrypt-master]$ java -jar WalletMaintenance.jar -w -t -c config.properties
+[oracle@example.com]$ java -jar WalletMaintenance.jar -w -t -c config.properties
 Connecting to wallet1.example..
 2018-04-01 17:53:31.0
 Connecting to wallet2.example..
