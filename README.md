@@ -27,9 +27,11 @@ The `WalletMaintenance.jar` will be the program that will help us automate the p
 
 commands:
 ```
-usage: WalletMain [--help | [-g] | [-e <FILE> -p <PUBLIC KEY>] | [-w -c <CONFIG FILE> | -f <alias1,alias2,etc..>]
+usage: WalletMain [--help | [-g] | [-e <FILE> -p <PUBLIC KEY>] | [-w -c <CONFIG FILE> | -f <alias1,alias2,etc..> | -t]
  -f,--fix-database <database-aliases>   fix one off wallet entries, use
                                         tns alias for wallet with comma separation, no space
+ -t,--test-database                     test database connections from the
+                                        wallet
  -e,--encrypt-file <file>               encrypt file
  -c,--config-file <config-file>         load config file
  -g,--generate-key                      create key pair
@@ -37,7 +39,6 @@ usage: WalletMain [--help | [-g] | [-e <FILE> -p <PUBLIC KEY>] | [-w -c <CONFIG 
  -h,--help                              shows help
  -w,--wallet                            change passwords for wallet
                                         entries
-
 ```
 
 ### To generate your key pair use the below command:
@@ -86,6 +87,26 @@ Example:
 java -jar WalletMaintenance.jar -w -c config.properties
 ```
 
+### Testing Database Connections from the Wallet
+
+Alternatively, you may test if the connection to the database before or after running the program:
+
+Usage:
+```
+[oracle@example.com]$ java -jar WalletMaintenance.jar -w -t -c <CONFIG_FILE>
+```
+
+Example:
+```
+[oracle@soa-training RSAEncrypt-master]$ java -jar WalletMaintenance.jar -w -t -c config.properties
+Connecting to wallet1.example..
+2018-04-01 17:53:31.0
+Connecting to wallet2.example..
+2018-04-01 17:53:31.0
+Connecting to wallet3.example..
+2018-04-01 17:53:31.0
+```
+
 ## Crontab entry:
 
 Modify the crontab to schedule your monthly password change:
@@ -106,3 +127,9 @@ Example below for 12:00AM at the first of every month. A sepearte entry for each
 ```
 00 00 1 * * java -jar /u01/scripts/WalletMaintenance.jar -w -c /u01/config.properties 2>&1 | tee /u01/logs/oracle_wallet_maintenance.log
 ```
+
+
+## TO-DO:
++ Email Reporting Service for Errors
++ Implement Ceasar Cipher
++ Command-Line Argument to Regenerate Everything including the Wallet itself.
