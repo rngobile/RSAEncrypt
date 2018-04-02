@@ -3,6 +3,8 @@ package oracle.wallet.maintenance;
 import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 public class ManageWallet {
     private String walletLocation, walletPassword;
@@ -10,6 +12,10 @@ public class ManageWallet {
     private Runtime runtime = null;
 
     public ManageWallet(String walletLocation, String walletPassword){
+        Map<String,String> variables = new HashMap<String,String>();
+        variables.put("walletLocation",walletLocation);
+        checkInjections(variables);
+
         this.walletLocation = walletLocation;
         this.walletPassword = walletPassword;
 
@@ -24,6 +30,19 @@ public class ManageWallet {
 
         BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
         return input;
+    }
+
+    private void checkInjections(Map<String, String> variables){
+        char[] injection = {';','|','$','`','&'};
+
+        for (int i = 0; i < injection.length; i++){
+            for(Map.Entry<String,String> entry: variables.entrySet()){
+                if(entry.getValue().indexOf(injection[i]) >= 0){
+                    System.out.println("Error: Character " + injection[i] + " is not allowed for " + entry.getKey());
+                    return;
+                }
+            }
+        }
     }
     
     public List<WalletInfo> listWallet() throws Exception{
