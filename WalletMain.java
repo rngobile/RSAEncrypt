@@ -116,7 +116,6 @@ public class WalletMain {
 
                 if (cmd.hasOption("w")) {
                     String walletLocation = config.getProperty("walletLocation");
-                    //String tnsAdmin = config.getProperty("tnsAdmin");
                     int maxFiles = Integer.parseInt(config.getProperty("maxFiles"));
                     String secretKey = config.getProperty("secretKey");
                     String message = config.getProperty("message");
@@ -128,7 +127,7 @@ public class WalletMain {
                         List<WalletInfo> entries = wallet.listWallet();
 
                         if (cmd.hasOption("f")) {
-                            String[] fixEntries = cmd.getOptionValue("f").split(",");
+                            String[] fixEntries = cmd.getOptionValue("f").toLowerCase().split(",");
                             for (int j = 0; j < fixEntries.length; j++){
                                 for (int k = 0; k < entries.size(); k++){
                                     if (fixEntries[j].equals(entries.get(k).getAlias())){

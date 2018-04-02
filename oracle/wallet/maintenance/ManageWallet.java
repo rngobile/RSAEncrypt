@@ -39,8 +39,8 @@ public class ManageWallet {
        while (( line = input.readLine()) != null ){
            if ( line.matches("(\\d)+:(.*)") ) { 
                id =  Integer.parseInt(line.split(":")[0]);
-               alias = line.split(":")[1].trim().split(" ")[0];
-               username = line.split(":")[1].trim().split(" ")[1];
+               alias = line.split(":")[1].trim().split(" ")[0].toLowerCase();
+               username = line.split(":")[1].trim().split(" ")[1].toLowerCase();
 
                WalletInfo entry = new WalletInfo(id, alias, username);
                entries.add(entry);
