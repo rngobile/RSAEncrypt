@@ -134,5 +134,6 @@ Example below for 12:00AM at the first of every month.
 + Base64 Class
 + Command-Line Argument to Regenerate Everything including the Wallet itself.
 + SetProperty for ConfigFile
++ Encrypt secretKey and message parameters
 + Threading
 
