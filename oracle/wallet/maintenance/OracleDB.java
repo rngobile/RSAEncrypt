@@ -23,6 +23,7 @@ public class OracleDB{
     }
 
     public void connect(String tnsName){
+        System.out.println("Connecting to " + tnsName + "..");
         try{
             Class.forName(JDBC_DRIVER);
         } catch (ClassNotFoundException e) {

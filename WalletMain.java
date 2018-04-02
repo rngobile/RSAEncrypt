@@ -7,8 +7,31 @@ public class WalletMain {
     static HelpFormatter formatter = new HelpFormatter();
 
     public static void printHelp(Options options){
-        formatter.printHelp("WalletMain [--help | [-g] | [-e <FILE> -p <PUBLIC KEY>] | [-w -c <CONFIG FILE> | -f <WALLET ALIAS>]", options);
+        formatter.printHelp("WalletMain [--help | [-g] | [-e <FILE> -p <PUBLIC KEY>] | [-w -c <CONFIG FILE> | -f <alias1,alias2,etc..> | -t]", options);
         System.exit(0);
+    }
+
+    public static void changePasswords(WalletInfo entry, ManageWallet wallet, PropertyFile config, Boolean testFlag) throws Exception{
+        String tnsAdmin = config.getProperty("tnsAdmin");
+        String walletLocation = config.getProperty("walletLocation");
+        int id = entry.getId();
+        String alias = entry.getAlias();
+
+        OracleDB db = new OracleDB(tnsAdmin, walletLocation);
+        db.connect(alias);
+        if (testFlag) {
+            db.test("sysdate");
+        } else {
+            PasswordGenerator gen = new PasswordGenerator();
+            String newPassword = gen.generatePassword(30);
+            boolean success = db.changePassword(entry.getName(), newPassword, entry.getPassword());
+            if (success){
+                wallet.changePassword(id, newPassword);
+            } else{
+                System.out.println("!! -- Skipping " + alias + ": Please fix manually with the --fix-database argument. --!!" );
+    
+            }
+       }
     }
 
     public static void main(String[] args){
@@ -50,6 +73,7 @@ public class WalletMain {
                 .withDescription("fix one off wallet entries, use tns alias for wallet with comma separation, no space")
                 .create("f")
                 );
+        options.addOption("t", "test-database", false, "test database connections from the wallet");
         options.addOption("h", "help", false, "shows help");
         options.addOption("g", "generate-key", false, "create key pair");
 
@@ -83,10 +107,16 @@ public class WalletMain {
             if (cmd.hasOption("c")){
                 String file = cmd.getOptionValue("c");
                 PropertyFile config = new PropertyFile(file);
+                Boolean testFlag;
+                if (cmd.hasOption("t")){
+                    testFlag = true;
+                } else {
+                    testFlag = false;
+                }
 
                 if (cmd.hasOption("w")) {
                     String walletLocation = config.getProperty("walletLocation");
-                    String tnsAdmin = config.getProperty("tnsAdmin");
+                    //String tnsAdmin = config.getProperty("tnsAdmin");
                     int maxFiles = Integer.parseInt(config.getProperty("maxFiles"));
                     String secretKey = config.getProperty("secretKey");
                     String message = config.getProperty("message");
@@ -102,30 +132,14 @@ public class WalletMain {
                             for (int j = 0; j < fixEntries.length; j++){
                                 for (int k = 0; k < entries.size(); k++){
                                     if (fixEntries[j].equals(entries.get(k).getAlias())){
-                                        System.out.println("Connecting to "  + entries.get(k).getAlias() + "..");
-                                        OracleDB db = new OracleDB(tnsAdmin, walletLocation);
-                                        db.connect(entries.get(k).getAlias());
-                                        db.test("sysdate");
+                                        changePasswords(entries.get(k), wallet, config, testFlag);
                                     }
                                 }
                             }
                         } else {
                             for (int i = 0; i < entries.size(); i++){
-                                OracleDB db = new OracleDB(tnsAdmin, walletLocation);
-                                String alias = entries.get(i).getAlias();
-                                int id = entries.get(i).getId();
-                                System.out.println("Connecting to "  + alias + "..");
-                                db.connect(alias);
-                                PasswordGenerator gen = new PasswordGenerator();
-                                String newPassword = gen.generatePassword(30);
-                                boolean success = db.changePassword(entries.get(i).getName(), newPassword, entries.get(i).getPassword());
-                                //db.test("sysdate");
-                                if (success){
-                                    wallet.changePassword(id, newPassword);
-                                } else{
-                                    System.out.println("!! -- Skipping " + alias + ": Please fix manually with the --fix-database argument. --!!" );
-                                }
-                            }
+                                changePasswords(entries.get(i), wallet, config, testFlag);
+                           }
                         }
                     } catch (Exception e){
                         e.printStackTrace();
