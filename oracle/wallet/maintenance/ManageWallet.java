@@ -39,6 +39,7 @@ public class ManageWallet {
             for(Map.Entry<String,String> entry: variables.entrySet()){
                 if(entry.getValue().indexOf(injection[i]) >= 0){
                     System.out.println("Error: Character " + injection[i] + " is not allowed for " + entry.getKey());
+                    System.exit(0);
                     return;
                 }
             }

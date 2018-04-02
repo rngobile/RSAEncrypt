@@ -59,12 +59,11 @@ public class OracleDB{
         for (int i = 0; i < injection.length; i++){
             for(Map.Entry<String,String> entry: variables.entrySet()){
                 if(entry.getValue().indexOf(injection[i]) >= 0){
-                    System.out.println("Error: Character " + injection[i] + " is not allowed for " + entry.getKey());
+                    System.out.println("Error: Character " + injection[i] + " is not allowed for " + entry.getKey() + ". Value: " + entry.getValue());
                     return;
                 }
             }
         }
-
    }
 
     public boolean changePassword(String user, String newPassword, String oldPassword){
