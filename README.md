@@ -123,7 +123,7 @@ crontab time format:
 +------------ Minute            (range: 0-59)
 ```
 
-Example below for 12:00AM at the first of every month. A sepearte entry for each Domain will be needed:
+Example below for 12:00AM at the first of every month. 
 ```
 00 00 1 * * java -jar /u01/scripts/WalletMaintenance.jar -w -c /u01/config.properties 2>&1 | tee /u01/logs/oracle_wallet_maintenance.log
 ```
