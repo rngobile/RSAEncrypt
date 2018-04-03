@@ -100,8 +100,7 @@ public class RSAEncryptJDK6 {
     
     public static String encryptB64(String publicFile, String file) throws Exception {
         B64 base64 = new B64();
-        String encrypted = base64.encode(encrypt(publicFile, file));
-        return encrypted;
+        return base64.encode(encrypt(publicFile, file));
     }
 
     public static byte[] encrypt(String publicFile, String message) throws Exception {
@@ -112,7 +111,20 @@ public class RSAEncryptJDK6 {
         return cipher.doFinal(message.getBytes());
     }
 
-    public static String decrypt(String privateFile, String file) throws Exception {
+    public static byte[] decrypt(String privateFile, String message) throws Exception {
+        PrivateKey privateKey = getPrivate(privateFile);
+        Cipher cipher = Cipher.getInstance("RSA");  
+        cipher.init(Cipher.DECRYPT_MODE, privateKey);  
+        
+        return cipher.doFinal(message.getBytes());
+    }
+
+    public static String decryptFromB64(String privateFile, String message) throws Exception{
+        B64 base64 = new B64();
+        return base64.decode(decrypt(privateFile, message));
+    }
+    
+    public static String decryptFromFile(String privateFile, String file) throws Exception {
         byte[] bytes = new byte[file.length()];
         int i;
 

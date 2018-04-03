@@ -95,7 +95,7 @@ public class WalletMain {
                 String publicKey = cmd.getOptionValue("p");
                 PropertyFile properties = new PropertyFile(file);
                 try {
-                   String encrypted = RSAEncryptJDK6.encryptB64(publicKey, file);
+                   String encrypted = RSAEncryptJDK6.encryptB64(publicKey, properties.getProperty("message"));
                    properties.setProperty("message",encrypted);
                 } catch (Exception e){
                    e.printStackTrace(); 
@@ -123,7 +123,9 @@ public class WalletMain {
 
                     RSAEncryptJDK6 rsa = new RSAEncryptJDK6();
                     try{
-                        String newMessage = rsa.decrypt(secretKey, message);
+                        System.out.println(message);
+                        String newMessage = rsa.decryptFromB64(secretKey, message);
+                        System.out.println(newMessage);
                         ManageWallet wallet = new ManageWallet(walletLocation, newMessage);
                         List<WalletInfo> entries = wallet.listWallet();
 
