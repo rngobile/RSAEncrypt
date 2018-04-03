@@ -8,15 +8,12 @@ import java.io.FileOutputStream;
 
 public class PropertyFile {
     private Properties prop = new Properties();
-    OutputStream out = null;
-    InputStream in = null;
     
     public PropertyFile(String file){
         try {
-            this.in = new FileInputStream(file);
-            this.prop.load(this.in);
-            this.in.close();
-            this.out = new FileOutputStream(file);
+            InputStream in = new FileInputStream(file);
+            this.prop.load(in);
+            in.close();
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(0);
@@ -28,14 +25,12 @@ public class PropertyFile {
     }
 
     public void setProperty(String propertyName, String propertyValue){
-        this.prop.setProperty(propertyName, propertyValue);
-    }
-
-    public void closeFile(){
         try{
+            OutputStream out = new FileOutputStream(file);
+            this.prop.setProperty(propertyName, propertyValue);
             this.prop.store(out, null);
-            this.out.close();
-        } catch (Exception e) {
+            out.close();
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
