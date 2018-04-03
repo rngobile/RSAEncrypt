@@ -93,10 +93,10 @@ public class WalletMain {
             if(cmd.hasOption("p")){
                 String file = cmd.getOptionValue("e");
                 String publicKey = cmd.getOptionValue("p");
-
+                PropertyFile properties = new PropertyFile(file);
                 try {
                    String encrypted = RSAEncryptJDK6.encryptB64(publicKey, file);
-                   System.out.println(encrypted);
+                   properties.setProperty("message",encrypted);
                 } catch (Exception e){
                    e.printStackTrace(); 
                 }

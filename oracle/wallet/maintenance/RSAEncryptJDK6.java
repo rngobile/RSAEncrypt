@@ -104,25 +104,12 @@ public class RSAEncryptJDK6 {
         return encrypted;
     }
 
-    public static byte[] encrypt(String publicFile, String file) throws Exception {
-        byte[] bytes = new byte[file.length()];
-        int i; 
+    public static byte[] encrypt(String publicFile, String message) throws Exception {
         PublicKey publicKey = getPublic(publicFile);
         Cipher cipher = Cipher.getInstance("RSA");  
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);  
 
-        FileInputStream fileIn = new FileInputStream(file);
-
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-
-        while (( i = fileIn.read(bytes)) != -1) {
-            buffer.write(bytes,0,i);
-        }
-        buffer.flush();
-
-        byte[] encrypted = cipher.doFinal(buffer.toByteArray());
-
-        return encrypted;
+        return cipher.doFinal(message.getBytes());
     }
 
     public static String decrypt(String privateFile, String file) throws Exception {
