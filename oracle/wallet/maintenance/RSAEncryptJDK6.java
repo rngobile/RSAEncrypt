@@ -79,7 +79,7 @@ public class RSAEncryptJDK6 {
         return publicKey;
     }
 
-    public static void encrypt(String publicFile, String file) throws Exception {
+    public static void encrypt2File(String publicFile, String file) throws Exception {
         byte[] bytes = new byte[file.length()];
         int i; 
         PublicKey publicKey = getPublic(publicFile);
@@ -98,6 +98,27 @@ public class RSAEncryptJDK6 {
         cipherOut.close();
     }
     
+    public static String encrypt(String publicFile, String file) throws Exception {
+        byte[] bytes = new byte[file.length()];
+        int i; 
+        PublicKey publicKey = getPublic(publicFile);
+        Cipher cipher = Cipher.getInstance("RSA");  
+        cipher.init(Cipher.ENCRYPT_MODE, publicKey);  
+
+        FileInputStream fileIn = new FileInputStream(file);
+
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+        while (( i = fileIn.read(bytes)) != -1) {
+            buffer.write(bytes,0,i);
+        }
+        buffer.flush();
+
+        String encrypted = new String(cipher.doFinal(buffer.toByteArray()));
+
+        return encrypted;
+    }
+
     public static String decrypt(String privateFile, String file) throws Exception {
         byte[] bytes = new byte[file.length()];
         int i;
@@ -108,7 +129,6 @@ public class RSAEncryptJDK6 {
 
         FileInputStream fileIn = new FileInputStream(file);
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-
 
         while (( i = fileIn.read(bytes)) != -1) {
             buffer.write(bytes,0,i);
