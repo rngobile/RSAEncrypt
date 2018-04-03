@@ -95,7 +95,8 @@ public class WalletMain {
                 String publicKey = cmd.getOptionValue("p");
 
                 try {
-                   RSAEncryptJDK6.encrypt(publicKey, file);
+                   String encrypted = RSAEncryptJDK6.encryptB64(publicKey, file);
+                   System.out.println(encrypted);
                 } catch (Exception e){
                    e.printStackTrace(); 
                 }

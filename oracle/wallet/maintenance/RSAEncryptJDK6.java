@@ -98,7 +98,13 @@ public class RSAEncryptJDK6 {
         cipherOut.close();
     }
     
-    public static String encrypt(String publicFile, String file) throws Exception {
+    public static String encryptB64(String publicFile, String file) throws Exception {
+        B64 base64 = new B64();
+        String encrypted = base64.encode(encrypt(publicFile, file));
+        return encrypted;
+    }
+
+    public static byte[] encrypt(String publicFile, String file) throws Exception {
         byte[] bytes = new byte[file.length()];
         int i; 
         PublicKey publicKey = getPublic(publicFile);
@@ -114,7 +120,7 @@ public class RSAEncryptJDK6 {
         }
         buffer.flush();
 
-        String encrypted = new String(cipher.doFinal(buffer.toByteArray()));
+        byte[] encrypted = cipher.doFinal(buffer.toByteArray());
 
         return encrypted;
     }
