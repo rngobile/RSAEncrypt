@@ -133,7 +133,7 @@ public class WalletMain {
                             for (int j = 0; j < fixEntries.length; j++){
                                 for (int k = 0; k < entries.size(); k++){
                                     if (fixEntries[j].equals(entries.get(k).getAlias())){
-                                        changePasswords(entries.get(k), wallet, config, testFlag);
+                                        changePasswords(entries.get(k), wallet, config, file, testFlag);
                                     }
                                 }
                             }
