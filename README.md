@@ -63,7 +63,7 @@ Private Key(PKCS#8): 1518263116.key
 Public Key(X.509): 1518263116.pub
 ```
 
-Place your the path to your Private Key that was generated in your config.properties file in the `secretKey` field. 
+Place your the path to your Private Key that was generated in your config.properties file in the `secretKey` field.  
 **Note:** For better security, place this key outside of where the code resides.
 
 ### Encrypt your password in the config.properties file by running the below command
