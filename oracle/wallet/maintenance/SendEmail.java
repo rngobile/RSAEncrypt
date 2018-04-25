@@ -16,7 +16,7 @@ public class SendEmail{
             InputStream in = new FileInputStream(configFile);
             prop.load(in);
         } catch (Exception e){
-            e.printStrackTrace();
+            e.printStackTrace();
         }
 
         this.to = prop.getProperty("mail.to");
@@ -28,7 +28,7 @@ public class SendEmail{
         properties.setProperty("mail.smtp.host", host);
         properties.setProperty("mail.smtp.starttls.enable", "true");
 
-        this.session = session.getDefaultIntance(properties);
+        this.session = session.getDefaultInstance(properties);
     }
 
     public void send(String subject, String text){
@@ -39,7 +39,7 @@ public class SendEmail{
                 message.addRecipient(Message.RecipientType.TO, new InternetAddress(this.to.split(",")[i]));
             }
             if (this.cc != null && !(this.cc.isEmpty())){
-                for (int i = 0; i < this.cc.split(",").lenth; i++){
+                for (int i = 0; i < this.cc.split(",").length; i++){
                     message.addRecipient(Message.RecipientType.CC, new InternetAddress(this.cc.split(",")[i]));
                 }
             }
@@ -48,7 +48,7 @@ public class SendEmail{
 
             Transport.send(message);
         } catch(MessagingException mex){
-            mex.printStrackTrace();
+            mex.printStackTrace();
         }
     }
 }
