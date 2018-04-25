@@ -98,6 +98,9 @@ public class WalletMain {
                    int maxFiles = Integer.parseInt(properties.getProperty("maxFiles"));
                    String encrypted = RSAEncryptJDK6.encryptB64(publicKey, properties.getProperty("message"), maxFiles);
                    properties.setProperty("message",encrypted);
+                   B64 base64 = new B64();
+                   String encryptedKey = base64.encode(properties.getProperty("secretKey").getBytes(), maxFiles);
+                   properties.setProperty("secretKey",encryptedKey);
                 } catch (Exception e){
                    e.printStackTrace(); 
                 }
@@ -119,7 +122,8 @@ public class WalletMain {
                 if (cmd.hasOption("w")) {
                     String walletLocation = config.getProperty("walletLocation");
                     int maxFiles = Integer.parseInt(config.getProperty("maxFiles"));
-                    String secretKey = config.getProperty("secretKey");
+                    B64 base64 = new B64();
+                    String secretKey = new String(base64.decode(config.getProperty("secretKey").getBytes(), maxFiles));
                     String message = config.getProperty("message");
 
                     RSAEncryptJDK6 rsa = new RSAEncryptJDK6();
