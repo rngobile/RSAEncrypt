@@ -11,13 +11,13 @@ public class WalletMain {
         System.exit(0);
     }
 
-    public static void changePasswords(WalletInfo entry, ManageWallet wallet, PropertyFile config, Boolean testFlag) throws Exception{
+    public static void changePasswords(WalletInfo entry, ManageWallet wallet, PropertyFile config, String file, Boolean testFlag) throws Exception{
         String tnsAdmin = config.getProperty("tnsAdmin");
         String walletLocation = config.getProperty("walletLocation");
         int id = entry.getId();
         String alias = entry.getAlias();
 
-        OracleDB db = new OracleDB(tnsAdmin, walletLocation);
+        OracleDB db = new OracleDB(tnsAdmin, walletLocation, file);
         db.connect(alias);
         if (testFlag) {
             db.test("sysdate");
@@ -139,7 +139,7 @@ public class WalletMain {
                             }
                         } else {
                             for (int i = 0; i < entries.size(); i++){
-                                changePasswords(entries.get(i), wallet, config, testFlag);
+                                changePasswords(entries.get(i), wallet, config, file, testFlag);
                            }
                         }
                     } catch (Exception e){

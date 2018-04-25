@@ -8,6 +8,7 @@ public class OracleDB{
     static final String JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver";
     private String tnsAdmin = "/u01/app/oracle/product/12.1.0/dbhome_2/network/admin";
     private String walletLocation = "/home/oracle/wallets";
+    private String configFile = "";
     private Connection conn = null;
 
     public OracleDB(){
@@ -20,6 +21,14 @@ public class OracleDB{
         this.walletLocation = walletLocation;
         System.setProperty("oracle.net.tns_admin",this.tnsAdmin);
         System.setProperty("oracle.net.wallet_location",this.walletLocation);
+    }
+
+    public OracleDB(String tnsAdmin, String walletLocation, String configFile){
+        this.tnsAdmin = tnsAdmin;
+        this.walletLocation = walletLocation;
+        System.setProperty("oracle.net.tns_admin",this.tnsAdmin);
+        System.setProperty("oracle.net.wallet_location",this.walletLocation);
+        this.configFile = configFile;
     }
 
     public void connect(String tnsName){
@@ -37,6 +46,10 @@ public class OracleDB{
         } catch (SQLException e) {
             System.out.println("Connection Failed!");
             e.printStackTrace();
+            if ( this.configFile != null && !(this.configFile.isEmpty)){
+                SendEmail email = new SendEmail(this.configFile);
+                email.send("Connection Failed!\n" + e.printStackTrace());
+            }
             return;
         }
     }
@@ -84,6 +97,10 @@ public class OracleDB{
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
+                if ( this.configFile != null && !(this.configFile.isEmpty)){
+                    SendEmail email = new SendEmail(this.configFile);
+                    email.send("Database Error!\n" + e.printStackTrace());
+                }
                 return false;
             } finally {
                 disconnect();
