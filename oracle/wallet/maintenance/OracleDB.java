@@ -46,7 +46,7 @@ public class OracleDB{
         } catch (SQLException e) {
             System.out.println("Connection Failed!");
             e.printStackTrace();
-            if ( this.configFile != null && !(this.configFile.isEmpty)){
+            if ( this.configFile != null && !(this.configFile.isEmpty())){
                 SendEmail email = new SendEmail(this.configFile);
                 email.send("[ " + tnsName + "] Connection Failed!\n", e.printStackTrace());
             }
@@ -97,7 +97,7 @@ public class OracleDB{
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
-                if ( this.configFile != null && !(this.configFile.isEmpty)){
+                if ( this.configFile != null && !(this.configFile.isEmpty())){
                     SendEmail email = new SendEmail(this.configFile);
                     email.send("[" + tnsName + "] Database Error!\n", e.printStackTrace());
                 }
