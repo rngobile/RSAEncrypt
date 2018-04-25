@@ -123,7 +123,6 @@ public class WalletMain {
 
                     RSAEncryptJDK6 rsa = new RSAEncryptJDK6();
                     try{
-                        System.out.println(message);
                         String newMessage = rsa.decryptFromB64(secretKey, message);
                         ManageWallet wallet = new ManageWallet(walletLocation, newMessage);
                         List<WalletInfo> entries = wallet.listWallet();
