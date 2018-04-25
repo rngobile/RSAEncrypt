@@ -1,11 +1,11 @@
 package oracle.wallet.maintenance;
 
-public class Cipher {
+public class Cipher64 {
     private String message = "";
     private int shift = 0;
     private static int LIMIT = 91;
 
-    public Cipher(String message, int shift){
+    public Cipher64(String message, int shift){
         this.message = message;
         this.shift = shift;
 
