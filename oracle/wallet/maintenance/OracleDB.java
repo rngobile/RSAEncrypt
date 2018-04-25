@@ -3,6 +3,8 @@ package oracle.wallet.maintenance;
 import java.sql.*;
 import java.util.Map;
 import java.util.HashMap;
+import java.io.StringWriter;
+import java.io.PrintWriter;
 
 public class OracleDB{
     static final String JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver";
@@ -48,7 +50,10 @@ public class OracleDB{
             e.printStackTrace();
             if ( this.configFile != null && !(this.configFile.isEmpty())){
                 SendEmail email = new SendEmail(this.configFile);
-                email.send("[ " + tnsName + "] Connection Failed!\n", e.printStackTrace());
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                email.send("[OracleWalletMaintenance] Connection Failed!\n", sw.toString());
             }
             return;
         }
@@ -99,7 +104,10 @@ public class OracleDB{
                 e.printStackTrace();
                 if ( this.configFile != null && !(this.configFile.isEmpty())){
                     SendEmail email = new SendEmail(this.configFile);
-                    email.send("[" + tnsName + "] Database Error!\n", e.printStackTrace());
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    email.send("[OracleWalletMaintenance] Database Error!\n", sw.toString());
                 }
                 return false;
             } finally {
