@@ -48,7 +48,7 @@ public class OracleDB{
             e.printStackTrace();
             if ( this.configFile != null && !(this.configFile.isEmpty)){
                 SendEmail email = new SendEmail(this.configFile);
-                email.send("Connection Failed!\n" + e.printStackTrace());
+                email.send("[ " + tnsName + "] Connection Failed!\n", e.printStackTrace());
             }
             return;
         }
@@ -99,7 +99,7 @@ public class OracleDB{
                 e.printStackTrace();
                 if ( this.configFile != null && !(this.configFile.isEmpty)){
                     SendEmail email = new SendEmail(this.configFile);
-                    email.send("Database Error!\n" + e.printStackTrace());
+                    email.send("[" + tnsName + "] Database Error!\n", e.printStackTrace());
                 }
                 return false;
             } finally {
