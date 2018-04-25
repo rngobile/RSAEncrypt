@@ -8,17 +8,25 @@ The project will use a config file to determine necessary parameters:
 
 **walletLocation**=*The full path of the wallet folder to be configured*  
 **tnsAdmin**=*The location of the Oracle TNS file*  
-**maxFiles**=*This is the secret character shift number for encryption/decryption for your message* **--in-development**  
+**maxFiles**=*Required: Max amount of files the program can handle*  
 **secretKey**=*The path where the RSA Key is that will be use to decrypt your encoded password file*  
-**message**=*The path where the encoded password file that has been encrypted with your public key*  
+**message**=*This is the password for the oracle wallet*  
+**mail.to**=*Mail To line, email addresses seperated by commas, no space*  
+**mail.from**=*Mail From line, single email address*  
+**mail.host**=*Mail host server*  
+**mail.cc**=*Mail CC line, email addresses seperated by commas*  
 
 example config.properties:
 ```
 walletLocation = /home/oracle/wallets
 tnsAdmin = /u01/app/oracle/product/12.1.0/dbhome_2/network/admin/
 maxFiles = 300
-secretKey = 834644167.key
-message = hello.txt.enc
+secretKey = /u01/app/oracle/keystore/1518263116.key
+message = secretpassword
+mail.to = example@example.com
+mail.from = example@example.com
+mail.host=smtp.gmail.com
+mail.cc=
 ```
 
 ## Setting up monthly password changes
@@ -55,24 +63,16 @@ Private Key(PKCS#8): 1518263116.key
 Public Key(X.509): 1518263116.pub
 ```
 
-Place your Private Key that was generated in your config.properties file in the `secretKey` field.
+Place your the path to your Private Key that was generated in your config.properties file in the `secretKey` field. Note: For better security, place this key outside of where the code resides.
 
-### To create your encoded text, you must feed a file with your password in it on a single line.
+### Encrypt your password in the config.properties file by running the below command
 Usage:
 ```
-java -jar WalletMaintenance.jar -e <PASSWORD_FILE> -p <PUBLIC_KEY>
+java -jar WalletMaintenance.jar -e <CONFIG_FILE> -p <PUBLIC_KEY>
 ```
 Example Output:
 ```
-[oracle@example.com]$ echo my_password > example.txt
-
-[oracle@example.com]$ cat example.txt
-my_password
-
-[oracle@example.com]$ java -jar WalletMaintenance.jar -e example.txt -p 1518263116.pub
-
-[oracle@example.com]$ ls -lh example.txt.enc
--rw-r--r--. 1 oracle oinstall 256 Apr  1 14:22 example.txt.enc
+[oracle@example.com]$ java -jar WalletMaintenance.jar -e config.properties -p 1518263116.pub
 ```
 
 ### Running the password change
@@ -93,12 +93,12 @@ Alternatively, you may test if the connection to the database before or after ru
 
 Usage:
 ```
-[oracle@example.com]$ java -jar WalletMaintenance.jar -w -t -c <CONFIG_FILE>
+[oracle@example.com]$ java -jar WalletMaintenance.jar -w -c <CONFIG_FILE> -t
 ```
 
 Example:
 ```
-[oracle@example.com]$ java -jar WalletMaintenance.jar -w -t -c config.properties
+[oracle@example.com]$ java -jar WalletMaintenance.jar -w -c config.properties -t
 Connecting to wallet1.example..
 2018-04-01 17:53:31.0
 Connecting to wallet2.example..
@@ -130,10 +130,10 @@ Example below for 12:00AM at the first of every month.
 
 
 ## TO-DO:
-+ Email Reporting Service for Errors
-+ Base64 Class
++ ~~Email Reporting Service for Errors~~
++ ~~Base64 Class~~
 + Command-Line Argument to Regenerate Everything including the Wallet itself.
-+ SetProperty for ConfigFile
-+ Encrypt secretKey and message parameters
++ ~~SetProperty for ConfigFile~~
++ ~~Encrypt secretKey and message parameters~~
 + Threading
 
