@@ -98,9 +98,9 @@ public class RSAEncryptJDK6 {
         cipherOut.close();
     }
     
-    public static String encryptB64(String publicFile, String file) throws Exception {
+    public static String encryptB64(String publicFile, String file, int maxFile) throws Exception {
         B64 base64 = new B64();
-        return base64.encode(encrypt(publicFile, file));
+        return base64.encode(encrypt(publicFile, file), maxFile);
     }
 
     public static byte[] encrypt(String publicFile, String message) throws Exception {
@@ -120,9 +120,9 @@ public class RSAEncryptJDK6 {
         return decryptedMessage;
     }
 
-    public static String decryptFromB64(String privateFile, String message) throws Exception{
+    public static String decryptFromB64(String privateFile, String message, int maxFile) throws Exception{
         B64 base64 = new B64();
-        return decrypt(privateFile, base64.decode(message.getBytes()));
+        return decrypt(privateFile, base64.decode(message.getBytes(), maxFile));
     }
     
     public static String decryptFromFile(String privateFile, String file) throws Exception {
