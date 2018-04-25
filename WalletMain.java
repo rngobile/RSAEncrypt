@@ -125,7 +125,6 @@ public class WalletMain {
                     try{
                         System.out.println(message);
                         String newMessage = rsa.decryptFromB64(secretKey, message);
-                        System.out.println(newMessage);
                         ManageWallet wallet = new ManageWallet(walletLocation, newMessage);
                         List<WalletInfo> entries = wallet.listWallet();
 

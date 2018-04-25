@@ -111,17 +111,18 @@ public class RSAEncryptJDK6 {
         return cipher.doFinal(message.getBytes());
     }
 
-    public static byte[] decrypt(String privateFile, String message) throws Exception {
+    public static String decrypt(String privateFile, byte[] message) throws Exception {
         PrivateKey privateKey = getPrivate(privateFile);
         Cipher cipher = Cipher.getInstance("RSA");  
         cipher.init(Cipher.DECRYPT_MODE, privateKey);  
         
-        return cipher.doFinal(message.getBytes());
+        String decryptedMessage = new String(cipher.doFinal(message));
+        return decryptedMessage;
     }
 
     public static String decryptFromB64(String privateFile, String message) throws Exception{
         B64 base64 = new B64();
-        return base64.decode(decrypt(privateFile, message));
+        return decrypt(privateFile, base64.decode(message.getBytes()));
     }
     
     public static String decryptFromFile(String privateFile, String file) throws Exception {

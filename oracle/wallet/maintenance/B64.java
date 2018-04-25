@@ -13,7 +13,7 @@ public class B64{
         return new String(this.base64.encode(bytes));
     }
 
-    public String decode(byte[] bytes){
-        return new String(this.base64.decode(bytes));
+    public byte[] decode(byte[] bytes){
+        return this.base64.decode(bytes);
     }
 }
