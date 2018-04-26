@@ -74,6 +74,18 @@ java -jar WalletMaintenance.jar -e <CONFIG_FILE> -p <PUBLIC_KEY>
 Example Output:
 ```
 [oracle@example.com]$ java -jar WalletMaintenance.jar -e config.properties -p 1518263116.pub
+
+[oracle@example.com]$ cat config.properties
+#Wed Apr 25 19:01:23 PDT 2018
+secretKey=I0RtJP6e`E>s_0GeV/uiI/qibUK-_0GiIwB/JwR1JwRvKQdr^/S2
+walletLocation=/home/oracle/wallets
+mail.to=example@example.com
+mail.from=example@example.com
+mail.host=smtp.gmail.com
+maxFiles=999
+mail.cc=
+tnsAdmin=/u01/app/oracle/product/12.1.0/dbhome_2/network/admin/
+message=^Aqc,_iRfQws0hjQD1FIt,HLEu_d52JUTSsfVNohQ.KPJ1CF5UEmCIT>ObBDs-25srctlW2qi`V(Iv`aP16sp.aVCVT(MOM>vO,-UlEu0eK..ehw.A.,LAS3-_SN-JLuqeRe1OFihW,^bAbLhaneATirAa.f-2/BAP(Oj3Ns(0/arQ3JqLSUQW>tTRvEkKNB@FVuOR/16LD>owWNLQJTA6Kb/H1Dg/-qDJk5OQVhaIUhfjFamC0o3ip0h3R0O.Pwbd/s6c5w.p.@LDm._Ub060C4U`125^4Gr?0.O@bHMG/VI1qQemkMrNOCBpsS3aPRMuSJOS4j40OhAhF`H6whCN\=\=
 ```
 
 ### Running the password change
@@ -83,9 +95,18 @@ Usage:
 java -jar WalletMaintenance.jar -w -c <CONFIG_FILE>
 ```
 
-Example:
+Example Output:
 ```
-java -jar WalletMaintenance.jar -w -c config.properties
+[oracle@example.com]$ java -jar WalletMaintenance.jar -w -c config.properties
+Connecting to wallet1.com..
+Success: wallet1 password has been changed.
+Success: wallet password has been changed for oracle.security.client.password3.
+Connecting to wallet.manager..
+Success: walletmanager password has been changed.
+Success: wallet password has been changed for oracle.security.client.password2.
+Connecting to eggplant.test..
+Success: rn_test password has been changed.
+Success: wallet password has been changed for oracle.security.client.password1.
 ```
 
 ### Testing Database Connections from the Wallet
@@ -106,6 +127,34 @@ Connecting to wallet2.example..
 2018-04-01 17:53:31.0
 Connecting to wallet3.example..
 2018-04-01 17:53:31.0
+```
+
+### If there was a connection issue during the password change, you can run --fix-database
+
+Usage:
+```
+java -jar WalletMaintenance.jar -w -c <CONFIG FILE> --fix-database <alias1,alias2,etc..>
+```
+
+Example Output:
+```
+[oracle@example.com]$ mkstore -listCredential -wrl /home/oracle/wallets
+Oracle Secret Store Tool : Version 12.1.0.2
+Copyright (c) 2004, 2014, Oracle and/or its affiliates. All rights reserved.
+
+Enter wallet password:
+List credential (index: connect_string username)
+3: WALLET1.COM WALLET1
+2: wallet.manager walletmanager
+1: eggplant.test rn_test
+
+[oracle@example.com]$ java -jar WalletMaintenance.jar -w -c config.properties --fix-database wallet1.com,eggplant.test
+Connecting to wallet1.com..
+Success: wallet1 password has been changed.
+Success: wallet password has been changed for oracle.security.client.password3.
+Connecting to eggplant.test..
+Success: rn_test password has been changed.
+Success: wallet password has been changed for oracle.security.client.password1.
 ```
 
 ## Crontab entry:
