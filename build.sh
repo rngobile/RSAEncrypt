@@ -9,7 +9,9 @@ else
 fi
 
 if [ $? -eq 0 ]; then
-    find . -type f -name "*.class" -exec rm {} \;
+    find . -type f -name "*.class" -delete
+    find . -type f -name "*.java" -delete
+    find . -type d -empty -delete
 else 
    exit 0
 fi
