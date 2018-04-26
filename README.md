@@ -2,6 +2,29 @@
 
 This project was created to maintain Oracle Wallet password on a scheduled time. This will prevent issues with passwords expiring due to profile settings. Passwords are randomly generated with a fixed length of 30 characters.
 
+## Compiling source code
+Use the provided `build.sh` script to compile the java source code
+
+```
+[oracle@example.com]$ chmod +x build.sh
+
+[oracle@example.com]$ ./build.sh
+added manifest
+adding: WalletMain.class(in = 6345) (out= 3232)(deflated 49%)
+adding: oracle/wallet/maintenance/B64.class(in = 803) (out= 492)(deflated 38%)
+adding: oracle/wallet/maintenance/Cipher64.class(in = 1498) (out= 888)(deflated 40%)
+adding: oracle/wallet/maintenance/ManageWallet.class(in = 4860) (out= 2593)(deflated 46%)
+adding: oracle/wallet/maintenance/OracleDB.class(in = 5152) (out= 2782)(deflated 46%)
+adding: oracle/wallet/maintenance/PasswordGenerator.class(in = 1318) (out= 806)(deflated 38%)
+adding: oracle/wallet/maintenance/PropertyFile.class(in = 1267) (out= 689)(deflated 45%)
+adding: oracle/wallet/maintenance/RSAEncryptJDK6.class(in = 4397) (out= 2142)(deflated 51%)
+adding: oracle/wallet/maintenance/SendEmail.class(in = 2318) (out= 1246)(deflated 46%)
+adding: oracle/wallet/maintenance/WalletInfo.class(in = 936) (out= 458)(deflated 51%)
+
+[oracle@example.com]$ ls
+build.sh  config.properties  lib  README.md  WalletMaintenance.jar
+```
+
 ## Setting up config.properties
 
 The project will use a config file to determine necessary parameters:
@@ -16,7 +39,7 @@ The project will use a config file to determine necessary parameters:
 **mail.host**=*Mail host server*  
 **mail.cc**=*Mail CC line, email addresses seperated by commas*  
 
-example config.properties:
+Example config.properties:
 ```
 walletLocation = /home/oracle/wallets
 tnsAdmin = /u01/app/oracle/product/12.1.0/dbhome_2/network/admin/
@@ -25,7 +48,7 @@ secretKey = /u01/app/oracle/keystore/1518263116.key
 message = secretpassword
 mail.to = example@example.com
 mail.from = example@example.com
-mail.host=smtp.gmail.com
+mail.host = smtp.gmail.com
 mail.cc=
 ```
 
