@@ -9,6 +9,7 @@ else
 fi
 
 if [ $? -eq 0 ]; then
+    rm -f manifest
     find . -type f -name "*.class" -delete
     find . -type f -name "*.java" -delete
     find . -type d -empty -delete
