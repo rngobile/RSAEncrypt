@@ -1,6 +1,6 @@
 #!/bin/bash
 
-javac -cp lib/*:. WalletMain.javac
+javac -cp lib/*:. WalletMain.java
 
 if [ $? -eq 0 ]; then
     jar cvfm WalletMaintenance.jar manifest WalletMain.class oracle/wallet/maintenance/*.class
@@ -9,7 +9,7 @@ else
 fi
 
 if [ $? -eq 0 ]; then
-    find . -type f -name "*.class" -exec rm {} \ ;
+    find . -type f -name "*.class" -exec rm {} \;
 else 
    exit 0
 fi
